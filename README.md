@@ -26,22 +26,23 @@
 
 2. Добавить проперти для настройки
   * Если `queue.management.custom-object-mapper=false` и в контексте нет `ObjectMapper` то библиотека создаст дефолтный, если `queue.management.custom-object-mapper=true` или в контексте есть `ObjectMapper`, то дефолтный создаваться не будет.
-  * Определение connection:
-        ```
-        queue.management.configurations.<connection-name>.connection-prefix=<prefix>
-        ```
-
-        * `<connection-name>` - любое имя которым вы идентифицируете коннекшн к раббиту и префикс для имен бинов относящих  к данному коннекшену.
-        * `<prefix>` - префикс пропертей для установления коннекшена.
+  * Определение connection.
+  
+       ```properties
+        queue.management.configurations.local.connection-prefix=local.jms
+       ```
+            
+     * `<connection-name>` - любое имя которым вы идентифицируете коннекшн к раббиту и префикс для имен бинов относящих  к данному коннекшену.
+     * `<prefix>` - префикс пропертей для установления коннекшена.
 
         Пример: 
       
-        ```
+        ```properties
         queue.management.configurations.local.connection-prefix=local.jms
         ```
     
         Означает что для коннекта к раббиту будут использоваться:
-        ```
+        ```properties
         local.jms.host=localhost
         local.jms.port=5672
         local.jms.user=guest
@@ -51,9 +52,9 @@
         Если хотя бы одна из пропертей: host, port, user, password, vHost не будет найдена, то будет исключение.
    
 
-        * Поддержка retry(дефолтные значения при enabled=true):
+   * Поддержка retry(дефолтные значения при enabled=true):
 
-        ```        
+        ```properties    
         queue.management.configurations.<connection-name>.retry.maxAttempts=3
         queue.management.configurations.<connection-name>.retry.initial-interval=1000
         queue.management.configurations.<connection-name>.retry.multiplier=1.0
@@ -71,7 +72,7 @@
     ```
 
 7.  Есть настройки для многопоточной обработки @RabbitListener
-    ```
+    ```properties
     queue.management.configurations.<connection-name>.listener.concurrentConsumers
     queue.management.configurations.<connection-name>.listener.maxConcurrentConsumers
     ```
@@ -81,7 +82,7 @@
     queue.management.enabled=false
     ```
 10. Дефолтные значения настроек:
-    ```
+    ```properties
     queue.management.enabled=false
     queue.management.custom-object-mapper=false
     
@@ -131,7 +132,7 @@
     3. Добавлена поддержка многопоточных слушателей,
     которые можно настроить персонально для каждой очереди 
         
-          ```
+          ```properties
           queue.management.configurations.<connection-name>.queues.<queue-name>.listener.concurrentConsumers=<value>
           queue.management.configurations.<connection-name>.queues.<queue-name>.listener.maxConcurrentConsumers=<value>
           ```   
@@ -141,7 +142,7 @@
          2. Ни одна из очередей не требует многопоточной обработки.
          Тогда слушатель будет работать в однопоточном режиме, или согласно общим настройкам для всех слушателей:
          
-            ```
+            ```properties
             queue.management.configurations.<connection-name>.listener.concurrentConsumers=<value>
             queue.management.configurations.<connection-name>.listener.maxConcurrentConsumers=<value>
             ```
