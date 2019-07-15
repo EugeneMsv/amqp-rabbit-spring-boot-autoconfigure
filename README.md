@@ -5,21 +5,22 @@
 1. Подключить зависимости:
 
     ```xml
-    <dependency>
-        <groupId>com.demo.amqp</groupId>
-        <artifactId>spring-amqp-rabbit-configurator</artifactId>
-        <version>currentVersion</version>
-    </dependency>
     
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-messaging</artifactId>
-    </dependency>
-    
-    <dependency>
-        <groupId>org.springframework.amqp</groupId>
-        <artifactId>spring-rabbit</artifactId>
-    </dependency>
+        <dependency>
+            <groupId>com.demo.amqp</groupId>
+            <artifactId>spring-amqp-rabbit-configurator</artifactId>
+            <version>currentVersion</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-messaging</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit</artifactId>
+        </dependency>
     
   
     ```
@@ -86,7 +87,7 @@
     queue.management.enabled=false
     queue.management.custom-object-mapper=false
     
-    queue.management.configurations.<connection-name>.retry.enabled=false 
+    queue.management.configurations.<connection-name>.retry.enabled=false
     queue.management.configurations.<connection-name>.retry.maxAttempts=3
     queue.management.configurations.<connection-name>.retry.initial-interval=1000
     queue.management.configurations.<connection-name>.retry.multiplier=1.0
@@ -99,19 +100,19 @@
     queue.management.configurations.<connection-name>.listener.concurrentConsumers=1
     queue.management.configurations.<connection-name>.listener.maxConcurrentConsumers=1
     
-    queue.management.configurations.<connection-name>.queues.<queue-name>.durable=false
-    queue.management.configurations.<connection-name>.queues.<queue-name>.exclusive=false
-    queue.management.configurations.<connection-name>.queues.<queue-name>.autoDelete=false
-    queue.management.configurations.<connection-name>.queues.<queue-name>.with-dead-letter=false
-    queue.management.configurations.<connection-name>.queues.<queue-name>.dead-letter-config.bidirectional=false
-    queue.management.configurations.<connection-name>.queues.<queue-name>.dead-letter-config.time-to-live=3600000
+    queue.management.configurations.<connection-name>.queues.<queue-key>.durable=false
+    queue.management.configurations.<connection-name>.queues.<queue-key>.exclusive=false
+    queue.management.configurations.<connection-name>.queues.<queue-key>.autoDelete=false
+    queue.management.configurations.<connection-name>.queues.<queue-key>.with-dead-letter=false
+    queue.management.configurations.<connection-name>.queues.<queue-key>.dead-letter-config.bidirectional=false
+    queue.management.configurations.<connection-name>.queues.<queue-key>.dead-letter-config.time-to-live=3600000
     
     
-    queue.management.configurations.<connection-name>.topicExchanges.<topic-exchange-name>.name=
-    queue.management.configurations.<connection-name>.topicExchanges.<topic-exchange-name>.durable=false
-    queue.management.configurations.<connection-name>.topicExchanges.<topic-exchange-name>.autoDelete=false
+    queue.management.configurations.<connection-name>.topicExchanges.<topic-exchange-key>.name=
+    queue.management.configurations.<connection-name>.topicExchanges.<topic-exchange-key>.durable=false
+    queue.management.configurations.<connection-name>.topicExchanges.<topic-exchange-key>.autoDelete=false
     
-    queue.management.configurations.<connection-name>.bindings.<queue-name>.<topic-exchange-name>.routingKeys.<routing-key-name>=*.*.*
+    queue.management.configurations.<connection-name>.bindings.<queue-key>.<topic-exchange-key>.routingKeys.<routing-key-name>=*.*.*
     ```
     
 11. Features:
@@ -133,8 +134,8 @@
     которые можно настроить персонально для каждой очереди 
         
           ```properties
-          queue.management.configurations.<connection-name>.queues.<queue-name>.listener.concurrentConsumers=<value>
-          queue.management.configurations.<connection-name>.queues.<queue-name>.listener.maxConcurrentConsumers=<value>
+          queue.management.configurations.<connection-name>.queues.<queue-key>.listener.concurrentConsumers=<value>
+          queue.management.configurations.<connection-name>.queues.<queue-key>.listener.maxConcurrentConsumers=<value>
           ```   
           Т.к. слушатель может быть настроен сразу на несколько очередей, то есть следующие варианты:
          1. Только одна из очередей слушателя настроена на многопоточную обработку. 

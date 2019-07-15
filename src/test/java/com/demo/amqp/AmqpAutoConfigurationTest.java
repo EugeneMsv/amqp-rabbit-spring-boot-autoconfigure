@@ -28,7 +28,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import static com.demo.amqp.AmqpAutoConfigurationConstants.Queue.*;
-import static com.demo.amqp.AmqpBeanNameResolver.*;
+import static com.demo.amqp.bean.AmqpBeanNameResolver.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 

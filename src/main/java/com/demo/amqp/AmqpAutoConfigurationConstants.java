@@ -31,9 +31,13 @@ public class AmqpAutoConfigurationConstants {
 
         public static final String ROOT_PREFIX = "queue.management";
 
-        public static final String FACTORY_BEAN_NAME = "queue.management.factory.bean";
+        public static final String FACTORY_BEAN_NAME = "queue.management.bean.factory";
 
         public static final String FACTORY_BEAN_NAME_DEFAULT = "amqpBeansFactory";
+
+        public static final String BEAN_DEFINITION_CUSTOMIZER = "queue.management.bean.definition.customizer";
+
+        public static final String BEAN_DEFINITION_CUSTOMIZER_DEFAULT = "com.demo.amqp.bean.DefaultAmqpBeanDefinitionCustomizer";
 
         public static final String APPLICATION_NAME = "spring.application.name";
 

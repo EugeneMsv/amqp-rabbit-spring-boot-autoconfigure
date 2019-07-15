@@ -1,4 +1,4 @@
-package com.demo.amqp;
+package com.demo.amqp.bean;
 
 import com.demo.amqp.properties.AmqpListenerContainerProperties;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;

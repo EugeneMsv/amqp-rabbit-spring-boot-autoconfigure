@@ -1,4 +1,4 @@
-package com.demo.amqp;
+package com.demo.amqp.bean;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Queue;
@@ -8,6 +8,11 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.RabbitListenerContainerFactory;
 
+/**
+ * Factory for supplying bean instances. Each method can be called more then one time (depends on configuration properties).
+ * You can provide custom implementation, but in that case you also should provide bean name of your factory via
+ * {@link com.demo.amqp.AmqpAutoConfigurationConstants.Property#FACTORY_BEAN_NAME} property
+ */
 public interface AmqpBeansFactory {
 
     ConnectionFactory supplyConnectionFactory(String connectionName);

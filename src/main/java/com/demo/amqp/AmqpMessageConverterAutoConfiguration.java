@@ -22,7 +22,7 @@ public class AmqpMessageConverterAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(ObjectMapper.class)
-    @ConditionalOnProperty(name = "queue.management.custom-object-mapper", havingValue = "false")
+    @ConditionalOnProperty(name = "queue.management.custom-object-mapper", havingValue = "false", matchIfMissing = true)
     public ObjectMapper amqpDefaultObjectMapper() {
         return new ObjectMapper();
     }

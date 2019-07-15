@@ -1,7 +1,7 @@
-package com.demo.amqp;
+package com.demo.amqp.bean;
 
+import com.demo.amqp.AmqpPropertiesSupplier;
 import com.demo.amqp.properties.*;
-import com.demo.amqp.utils.ValidationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Binding;
@@ -74,9 +74,7 @@ public class DefaultAmqpBeansFactory implements AmqpBeansFactory {
 
     @Override
     public ConnectionFactory supplyConnectionFactory(String connectionName) {
-        AmqpConnectionProperties connectionProperties = propertiesSupplier.getConnectionProperties(connectionName);
-        ValidationUtils.notNullEnv(connectionProperties, "Not found connection properties for name=\'%s\'",
-                connectionName);
+        AmqpConnectionProperties connectionProperties = propertiesSupplier.getConnectionPropertiesFailFast(connectionName);
         CachingConnectionFactory cf = new CachingConnectionFactory(connectionProperties.getHost(),
                 connectionProperties.getPort());
         cf.setUsername(connectionProperties.getUser());
@@ -85,12 +83,13 @@ public class DefaultAmqpBeansFactory implements AmqpBeansFactory {
 
         cf.setConnectionNameStrategy(connectionFactory ->
                 propertiesSupplier.getSpringApplicationName() + StringUtils.capitalize(connectionName));
+        logger.debug("Created CachingConnectionFactory for connectionName={}", connectionName);
         return cf;
     }
 
     @Override
     public RabbitListenerContainerFactory supplyRabbitListenerContainerFactory(String connectionName) {
-        AmqpConfigurationProperties configProperties = propertiesSupplier.getConfigurationProperties(connectionName);
+        AmqpConfigurationProperties configProperties = propertiesSupplier.getConfigurationPropertiesFailFast(connectionName);
         ConnectionFactory connectionFactory = applicationContext.getBean(
                 AmqpBeanNameResolver.getConnectionFactoryBeanName(connectionName), ConnectionFactory.class);
         ConsumerSpecificRabbitListenerContainerFactory factory = new ConsumerSpecificRabbitListenerContainerFactory();
@@ -102,6 +101,7 @@ public class DefaultAmqpBeansFactory implements AmqpBeansFactory {
         factory.setMaxConcurrentConsumers(configProperties.getListener().getMaxConcurrentConsumers());
         factory.setMismatchedQueuesFatal(configProperties.isMismatchedQueuesFatal());
         factory.setConsumerProperties(collectNotEmptyConsumerProperties(configProperties));
+        logger.debug("Created ConsumerSpecificRabbitListenerContainerFactory for connectionName={}", connectionName);
         return factory;
     }
 
@@ -109,7 +109,9 @@ public class DefaultAmqpBeansFactory implements AmqpBeansFactory {
     public RabbitAdmin supplyRabbitAdmin(String connectionName) {
         ConnectionFactory connectionFactory = applicationContext.getBean(
                 AmqpBeanNameResolver.getConnectionFactoryBeanName(connectionName), ConnectionFactory.class);
-        return new RabbitAdmin(connectionFactory);
+        RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
+        logger.debug("Created RabbitAdmin for connectionName={}", connectionName);
+        return rabbitAdmin;
     }
 
     @Override
@@ -119,12 +121,13 @@ public class DefaultAmqpBeansFactory implements AmqpBeansFactory {
         RabbitTemplate rabbitTemplate = rabbitAdmin.getRabbitTemplate();
         messageConverter.ifPresent(rabbitTemplate::setMessageConverter);
         AmqpConfigurationProperties configurationProperties =
-                propertiesSupplier.getConfigurationProperties(connectionName);
+                propertiesSupplier.getConfigurationPropertiesFailFast(connectionName);
         AmqpRetryProperties retryProperties = configurationProperties.getRetry();
         if (retryProperties.isEnabled()) {
             rabbitTemplate.setRetryTemplate(createRetryTemplate(retryProperties));
             logger.debug("Added RetryTemplate to connection='{}', properties={}", connectionName, retryProperties);
         }
+        logger.debug("Created RabbitTemplate for connectionName={}", connectionName);
         return rabbitTemplate;
     }
 
@@ -133,10 +136,11 @@ public class DefaultAmqpBeansFactory implements AmqpBeansFactory {
         RabbitAdmin rabbitAdmin = applicationContext.getBean(
                 AmqpBeanNameResolver.getRabbitAdminBeanName(connectionName), RabbitAdmin.class);
         AmqpConfigurationProperties configurationProperties = propertiesSupplier
-                .getConfigurationProperties(connectionName);
-        AmqpQueueProperties queueProperties = propertiesSupplier.getQueueProperties(connectionName, queueKey);
+                .getConfigurationPropertiesFailFast(connectionName);
+        AmqpQueueProperties queueProperties = propertiesSupplier.getQueuePropertiesFailFast(connectionName, queueKey);
         Queue deadLetterQueue = convertPropsToDeadLetterQueue(queueProperties, configurationProperties);
         deadLetterQueue.setAdminsThatShouldDeclare(rabbitAdmin);
+        logger.debug("Created dead letter Queue for connectionName={} and queueKey={}", connectionName, queueKey);
         return deadLetterQueue;
     }
 
@@ -190,10 +194,11 @@ public class DefaultAmqpBeansFactory implements AmqpBeansFactory {
         RabbitAdmin rabbitAdmin = applicationContext.getBean(
                 AmqpBeanNameResolver.getRabbitAdminBeanName(connectionName), RabbitAdmin.class);
         AmqpConfigurationProperties configurationProperties = propertiesSupplier
-                .getConfigurationProperties(connectionName);
-        AmqpQueueProperties queueProperties = propertiesSupplier.getQueueProperties(connectionName, queueKey);
+                .getConfigurationPropertiesFailFast(connectionName);
+        AmqpQueueProperties queueProperties = propertiesSupplier.getQueuePropertiesFailFast(connectionName, queueKey);
         Queue queue = convertAmqpQueuePropertiesToQueue(queueProperties, configurationProperties);
         queue.setAdminsThatShouldDeclare(rabbitAdmin);
+        logger.debug("Created Queue for connectionName={} and queueKey={}", connectionName, queueKey);
         return queue;
     }
 
@@ -217,9 +222,11 @@ public class DefaultAmqpBeansFactory implements AmqpBeansFactory {
         RabbitAdmin rabbitAdmin = applicationContext.getBean(
                 AmqpBeanNameResolver.getRabbitAdminBeanName(connectionName), RabbitAdmin.class);
         AmqpTopicExchangeProperties topicExchangeProperties = propertiesSupplier
-                .getTopicExchangeProperties(connectionName, topicExchangeKey);
+                .getTopicExchangePropertiesFailFast(connectionName, topicExchangeKey);
         TopicExchange topicExchange = convertAmqpTopicExchangePropertiesToTopicExchange(topicExchangeProperties);
         topicExchange.setAdminsThatShouldDeclare(rabbitAdmin);
+        logger.debug("Created TopicExchange for connectionName={} and topicExchangeKey={}", connectionName,
+                topicExchangeKey);
         return topicExchange;
     }
 
@@ -237,13 +244,15 @@ public class DefaultAmqpBeansFactory implements AmqpBeansFactory {
         TopicExchange topicExchange = applicationContext.getBean(
                 AmqpBeanNameResolver.getTopicExchangeBeanName(connectionName, topicExchangeKey), TopicExchange.class);
         AmqpBindingProperties bindingProperties = propertiesSupplier
-                .getBindingProperties(connectionName, queueKey, topicExchangeKey);
+                .getBindingPropertiesFailFast(connectionName, queueKey, topicExchangeKey);
         String routingKeyValue = bindingProperties.getRoutingKeys().get(routingKey);
         Binding binding = BindingBuilder
                 .bind(queue)
                 .to(topicExchange)
                 .with(routingKeyValue);
         binding.setAdminsThatShouldDeclare(rabbitAdmin);
+        logger.debug("Created Binding for connectionName={}, queueKey={} topicExchangeKey={}, routingKey={}",
+                connectionName, queueKey, topicExchangeKey, routingKey);
         return binding;
     }
 }
