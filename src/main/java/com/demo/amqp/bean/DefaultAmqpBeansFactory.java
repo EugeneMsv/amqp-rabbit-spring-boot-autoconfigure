@@ -14,6 +14,7 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.RabbitListenerContainerFactory;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
@@ -33,22 +34,23 @@ public class DefaultAmqpBeansFactory implements AmqpBeansFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultAmqpBeansFactory.class);
 
-    private final AmqpPropertiesSupplier propertiesSupplier;
+    protected final AmqpPropertiesSupplier propertiesSupplier;
 
-    private final ApplicationContext applicationContext;
+    protected final ApplicationContext applicationContext;
 
-    private Optional<MessageConverter> messageConverter = Optional.empty();
+    protected Optional<MessageConverter> messageConverter = Optional.empty();
 
     public DefaultAmqpBeansFactory(Environment environment, ApplicationContext applicationContext) {
         this.propertiesSupplier = new AmqpPropertiesSupplier(environment);
         this.applicationContext = applicationContext;
     }
 
+    @Autowired
     public void setMessageConverter(MessageConverter messageConverter) {
         this.messageConverter = Optional.ofNullable(messageConverter);
     }
 
-    private Map<String, AmqpListenerContainerProperties> collectNotEmptyConsumerProperties(
+    protected Map<String, AmqpListenerContainerProperties> collectNotEmptyConsumerProperties(
             AmqpConfigurationProperties configProperties) {
         return configProperties.getQueues()
                 .entrySet().stream()
@@ -59,7 +61,7 @@ public class DefaultAmqpBeansFactory implements AmqpBeansFactory {
                         entry -> entry.getValue().getListener(), (o, n) -> o));
     }
 
-    private RetryTemplate createRetryTemplate(AmqpRetryProperties retryProperties) {
+    protected RetryTemplate createRetryTemplate(AmqpRetryProperties retryProperties) {
         RetryTemplate template = new RetryTemplate();
         SimpleRetryPolicy policy = new SimpleRetryPolicy();
         policy.setMaxAttempts(retryProperties.getMaxAttempts());
@@ -74,7 +76,8 @@ public class DefaultAmqpBeansFactory implements AmqpBeansFactory {
 
     @Override
     public ConnectionFactory supplyConnectionFactory(String connectionName) {
-        AmqpConnectionProperties connectionProperties = propertiesSupplier.getConnectionPropertiesFailFast(connectionName);
+        AmqpConnectionProperties connectionProperties = propertiesSupplier
+                .getConnectionPropertiesFailFast(connectionName);
         CachingConnectionFactory cf = new CachingConnectionFactory(connectionProperties.getHost(),
                 connectionProperties.getPort());
         cf.setUsername(connectionProperties.getUser());
@@ -89,11 +92,13 @@ public class DefaultAmqpBeansFactory implements AmqpBeansFactory {
 
     @Override
     public RabbitListenerContainerFactory supplyRabbitListenerContainerFactory(String connectionName) {
-        AmqpConfigurationProperties configProperties = propertiesSupplier.getConfigurationPropertiesFailFast(connectionName);
+        AmqpConfigurationProperties configProperties = propertiesSupplier
+                .getConfigurationPropertiesFailFast(connectionName);
         ConnectionFactory connectionFactory = applicationContext.getBean(
                 AmqpBeanNameResolver.getConnectionFactoryBeanName(connectionName), ConnectionFactory.class);
         ConsumerSpecificRabbitListenerContainerFactory factory = new ConsumerSpecificRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
+        messageConverter.ifPresent(factory::setMessageConverter);
         if (configProperties.getDefaultRequeueRejected() != null) {
             factory.setDefaultRequeueRejected(configProperties.getDefaultRequeueRejected());
         }
@@ -144,8 +149,8 @@ public class DefaultAmqpBeansFactory implements AmqpBeansFactory {
         return deadLetterQueue;
     }
 
-    private Queue convertPropsToDeadLetterQueue(AmqpQueueProperties queueProperties,
-                                                AmqpConfigurationProperties configProperties) {
+    protected Queue convertPropsToDeadLetterQueue(AmqpQueueProperties queueProperties,
+                                                  AmqpConfigurationProperties configProperties) {
         Map<String, Object> arguments = queueProperties.getArguments();
         AmqpDeadLetterProperties deadLetterConfig = queueProperties.getDeadLetterConfig();
         if (deadLetterConfig != null) {
@@ -167,14 +172,14 @@ public class DefaultAmqpBeansFactory implements AmqpBeansFactory {
                 arguments);
     }
 
-    private Map<String, Object> linkWithDeadLetter(String deadLetterQueueName) {
+    protected Map<String, Object> linkWithDeadLetter(String deadLetterQueueName) {
         Map<String, Object> arguments = new HashMap<>(2, 1.1F);
         arguments.put(ARGUMENT_KEY_DEAD_LETTER_EXCHANGE, ARGUMENT_VALUE_DEAD_LETTER_EXCHANGE);
         arguments.put(ARGUMENT_KEY_DEAD_LETTER_ROUTING, deadLetterQueueName);
         return arguments;
     }
 
-    private Map<String, Object> linkTimeToLive(Integer timeToLive) {
+    protected Map<String, Object> linkTimeToLive(Integer timeToLive) {
         return Optional.ofNullable(timeToLive)
                 .filter(v -> v > 0)
                 .map(v -> {
@@ -184,8 +189,8 @@ public class DefaultAmqpBeansFactory implements AmqpBeansFactory {
                 }).orElse(Collections.emptyMap());
     }
 
-    private String getDeadLetterQueueName(AmqpQueueProperties queueProperties,
-                                          AmqpConfigurationProperties configProperties) {
+    protected String getDeadLetterQueueName(AmqpQueueProperties queueProperties,
+                                            AmqpConfigurationProperties configProperties) {
         return queueProperties.getName() + configProperties.getDeadLetterSuffix();
     }
 
@@ -202,8 +207,8 @@ public class DefaultAmqpBeansFactory implements AmqpBeansFactory {
         return queue;
     }
 
-    private Queue convertAmqpQueuePropertiesToQueue(AmqpQueueProperties queueProperties,
-                                                    AmqpConfigurationProperties configProperties) {
+    protected Queue convertAmqpQueuePropertiesToQueue(AmqpQueueProperties queueProperties,
+                                                      AmqpConfigurationProperties configProperties) {
         Map<String, Object> arguments = queueProperties.getArguments();
         if (queueProperties.isWithDeadLetter()) {
             Map<String, Object> deadLetterArguments = linkWithDeadLetter(
@@ -230,7 +235,7 @@ public class DefaultAmqpBeansFactory implements AmqpBeansFactory {
         return topicExchange;
     }
 
-    private TopicExchange convertAmqpTopicExchangePropertiesToTopicExchange(AmqpTopicExchangeProperties properties) {
+    protected TopicExchange convertAmqpTopicExchangePropertiesToTopicExchange(AmqpTopicExchangeProperties properties) {
         return new TopicExchange(properties.getName(), properties.isDurable(),
                 properties.isAutoDelete(), properties.getArguments());
     }
@@ -255,4 +260,5 @@ public class DefaultAmqpBeansFactory implements AmqpBeansFactory {
                 connectionName, queueKey, topicExchangeKey, routingKey);
         return binding;
     }
+
 }

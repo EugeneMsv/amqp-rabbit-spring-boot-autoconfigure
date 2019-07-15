@@ -8,6 +8,7 @@ import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.config.AbstractRabbitListenerContainerFactory;
+import org.springframework.amqp.rabbit.config.RabbitListenerConfigUtils;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -58,6 +59,8 @@ public class AmqpAutoConfigurationTest {
 
     private void assertConnectionBeans(String connectionName) {
         ApplicationContext context = contextWrapper.getContext();
+        assertNotNull(context.getBean(RabbitListenerConfigUtils.RABBIT_LISTENER_ANNOTATION_PROCESSOR_BEAN_NAME));
+        assertNotNull(context.getBean(RabbitListenerConfigUtils.RABBIT_LISTENER_ENDPOINT_REGISTRY_BEAN_NAME));
         ConnectionFactory connectionFactory = context.getBean(
                 getConnectionFactoryBeanName(connectionName), ConnectionFactory.class);
         assertNotNull(connectionFactory);

@@ -4,6 +4,7 @@ import com.demo.amqp.bean.AmqpBeanDefinitionRegistrar;
 import com.demo.amqp.bean.AmqpBeansFactory;
 import com.demo.amqp.bean.DefaultAmqpBeansFactory;
 import com.demo.amqp.properties.AmqpProperties;
+import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurationSelector;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -26,7 +27,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @ConditionalOnProperty(name = "queue.management.enabled", havingValue = "true", matchIfMissing = true)
 @AutoConfigureAfter(AmqpMessageConverterAutoConfiguration.class)
 @AutoConfigureBefore(RabbitAutoConfiguration.class)
-@Import(AmqpBeanDefinitionRegistrar.class)
+@Import({AmqpBeanDefinitionRegistrar.class, RabbitListenerConfigurationSelector.class})
 public class AmqpAutoConfiguration {
 
     @Bean

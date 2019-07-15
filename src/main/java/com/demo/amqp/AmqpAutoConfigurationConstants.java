@@ -29,6 +29,8 @@ public class AmqpAutoConfigurationConstants {
             throw new UnsupportedOperationException(CONSTRUCTOR_CALL_NOT_ALLOWED);
         }
 
+        public static final String AUTO_CONFIGURE_EXCLUDE = "spring.autoconfigure.exclude";
+
         public static final String ROOT_PREFIX = "queue.management";
 
         public static final String FACTORY_BEAN_NAME = "queue.management.bean.factory";
