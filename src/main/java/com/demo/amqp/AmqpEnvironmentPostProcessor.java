@@ -29,6 +29,11 @@ public class AmqpEnvironmentPostProcessor implements EnvironmentPostProcessor {
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
 
+        String enabled = environment.getProperty(AmqpAutoConfigurationConstants.Property.MANAGEMENT_ENABLED);
+        if ("false".equalsIgnoreCase(enabled)) {
+            logger.debug("Skip cause {} is false", AmqpAutoConfigurationConstants.Property.MANAGEMENT_ENABLED);
+            return;
+        }
         String exclusions = environment.getProperty(AUTO_CONFIGURE_EXCLUDE);
         if (exclusions != null) {
             if (exclusions.contains(EXCLUDE_RABBIT_AUTO_CONFIGURATION_VALUE)) {

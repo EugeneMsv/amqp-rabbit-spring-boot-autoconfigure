@@ -33,6 +33,8 @@ public class AmqpAutoConfigurationConstants {
 
         public static final String ROOT_PREFIX = "queue.management";
 
+        public static final String MANAGEMENT_ENABLED = ROOT_PREFIX+".enabled";
+
         public static final String FACTORY_BEAN_NAME = "queue.management.bean.factory";
 
         public static final String FACTORY_BEAN_NAME_DEFAULT = "amqpBeansFactory";

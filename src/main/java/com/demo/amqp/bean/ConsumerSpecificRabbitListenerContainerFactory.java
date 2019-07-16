@@ -34,6 +34,7 @@ public class ConsumerSpecificRabbitListenerContainerFactory extends SimpleRabbit
             this.consumerPropertiesByQueueName = consumerProperties;
         }
     }
+
     @Override
     protected void initializeContainer(SimpleMessageListenerContainer instance, RabbitListenerEndpoint endpoint) {
         customizeConsumer(instance);
@@ -44,14 +45,7 @@ public class ConsumerSpecificRabbitListenerContainerFactory extends SimpleRabbit
         AmqpListenerContainerProperties listenerProperties = null;
         for (String queueName : instance.getQueueNames()) {
 
-            AmqpListenerContainerProperties finalListenerProperties = listenerProperties;
-            listenerProperties = Optional.ofNullable(consumerPropertiesByQueueName.get(queueName))
-                    .filter(properties -> properties.getConcurrentConsumers() > 1)
-                    .filter(properties -> properties.getMaxConcurrentConsumers() > 1)
-                    .filter(properties -> finalListenerProperties == null
-                            || properties.getMaxConcurrentConsumers() > finalListenerProperties
-                            .getMaxConcurrentConsumers())
-                    .orElse(finalListenerProperties);
+            listenerProperties = tryFindListenerProperties(listenerProperties, queueName);
 
             rawThreadNamePrefix.append(queueName).append(',');
         }
@@ -62,11 +56,22 @@ public class ConsumerSpecificRabbitListenerContainerFactory extends SimpleRabbit
                     .substring(0, Math.min(DEFAULT_MAX_THREAD_NAME_PREFIX_LENGTH, rawThreadNamePrefix.length()));
             ThreadPoolTaskExecutor threadPoolTaskExecutor = buildTaskExecutor(
                     threadNamePrefix + "-", listenerProperties);
+
             instance.setTaskExecutor(threadPoolTaskExecutor);
             instance.setMaxConcurrentConsumers(listenerProperties.getMaxConcurrentConsumers());
             instance.setConcurrentConsumers(listenerProperties.getConcurrentConsumers());
-
         }
+    }
+
+    private AmqpListenerContainerProperties tryFindListenerProperties(
+            AmqpListenerContainerProperties listenerProperties, String queueName) {
+        return Optional.ofNullable(consumerPropertiesByQueueName.get(queueName))
+                .filter(properties -> properties.getConcurrentConsumers() > 1)
+                .filter(properties -> properties.getMaxConcurrentConsumers() > 1)
+                .filter(properties -> listenerProperties == null
+                        || properties.getMaxConcurrentConsumers() > listenerProperties
+                        .getMaxConcurrentConsumers())
+                .orElse(listenerProperties);
     }
 
     private ThreadPoolTaskExecutor buildTaskExecutor(String threadNamePrefix,

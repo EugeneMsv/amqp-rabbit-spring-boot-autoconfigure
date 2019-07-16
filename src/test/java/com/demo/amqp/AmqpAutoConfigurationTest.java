@@ -1,5 +1,7 @@
 package com.demo.amqp;
 
+import com.demo.amqp.bean.AmqpBeansFactory;
+import com.demo.amqp.bean.DefaultAmqpBeanDefinitionCustomizer;
 import com.demo.amqp.properties.AmqpConnectionProperties;
 import org.junit.After;
 import org.junit.Before;
@@ -28,6 +30,8 @@ import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Map;
 
+import static com.demo.amqp.AmqpAutoConfigurationConstants.Property.BEAN_DEFINITION_CUSTOMIZER;
+import static com.demo.amqp.AmqpAutoConfigurationConstants.Property.FACTORY_BEAN_NAME;
 import static com.demo.amqp.AmqpAutoConfigurationConstants.Queue.*;
 import static com.demo.amqp.bean.AmqpBeanNameResolver.*;
 import static org.junit.Assert.*;
@@ -185,7 +189,8 @@ public class AmqpAutoConfigurationTest {
         String namePrefix = "local";
         ApplicationContext context = contextWrapper
                 .withConfiguration(MessageConverterConfiguration.class, AmqpAutoConfiguration.class)
-                .withEnvironment("queue.management.configurations.local.connection-prefix:local.jms",
+                .withEnvironment(
+                        "queue.management.configurations.local.connection-prefix:local.jms",
                         "local.jms.host:fakeHost",
                         "local.jms.port:123",
                         "local.jms.user:fakeUser",
@@ -486,5 +491,91 @@ public class AmqpAutoConfigurationTest {
         assertEquals(2, concurrentConsumersField.get(rabbitListenerContainerFactory));
         assertEquals(5, maxConcurrentConsumersField.get(rabbitListenerContainerFactory));
         assertEquals(false, defaultRequeueRejectedField.get(rabbitListenerContainerFactory));
+    }
+
+
+    @Configuration
+    protected static class CustomBeansFactoryConfiguration {
+
+        @Bean
+        public AmqpBeansFactory customBeansFactory() {
+            return mock(AmqpBeansFactory.class);
+        }
+
+    }
+
+    @Test
+    public void test_customAmqpBeansFactory() {
+        String customBeansFactoryName = "customBeansFactory";
+        ApplicationContext context = contextWrapper
+                .withConfiguration(CustomBeansFactoryConfiguration.class,
+                        MessageConverterConfiguration.class,
+                        AmqpAutoConfiguration.class)
+                .withEnvironment(
+                        FACTORY_BEAN_NAME + ":" + customBeansFactoryName,
+                        "queue.management.configurations.local.connection-prefix:local.jms",
+                        "local.jms.host:fakeHost",
+                        "local.jms.port:123",
+                        "local.jms.user:fakeUser",
+                        "local.jms.password:fakePassword",
+                        "local.jms.vHost:fakeVHost",
+                        "queue.management.configurations.local.queues.doc-request.name:fakeQueueName",
+                        "queue.management.configurations.local.queues.doc-request.durable:true")
+                .build()
+                .getContext();
+        String[] beanNamesForAmqpBeansFactory = context.getBeanNamesForType(AmqpBeansFactory.class);
+        assertNotNull(beanNamesForAmqpBeansFactory);
+        assertEquals(1, beanNamesForAmqpBeansFactory.length);
+        assertEquals(customBeansFactoryName, beanNamesForAmqpBeansFactory[0]);
+    }
+
+    public static class TestAmqpBeanDefinitionCustomizer extends DefaultAmqpBeanDefinitionCustomizer {
+
+        public static int invocationsAmount;
+
+        @Override
+        public Class<?> getConnectionFactoryClass() {
+            invocationsAmount++;
+            return super.getConnectionFactoryClass();
+        }
+
+        @Override
+        public Class<?> getRabbitListenerContainerFactoryClass() {
+            invocationsAmount++;
+            return super.getRabbitListenerContainerFactoryClass();
+        }
+
+        @Override
+        public Class<?> getRabbitTemplateClass() {
+            invocationsAmount++;
+            return super.getRabbitTemplateClass();
+        }
+
+        @Override
+        public Class<?> getRabbitAdminClass() {
+            invocationsAmount++;
+            return super.getRabbitAdminClass();
+        }
+    }
+
+    @Test
+    public void test_customAmqpBeanDefinitionCustomizer() {
+        assertEquals(0, TestAmqpBeanDefinitionCustomizer.invocationsAmount);
+        contextWrapper
+                .withConfiguration(MessageConverterConfiguration.class,
+                        AmqpAutoConfiguration.class)
+                .withEnvironment(
+                        BEAN_DEFINITION_CUSTOMIZER + ":" + "com.demo.amqp.AmqpAutoConfigurationTest$TestAmqpBeanDefinitionCustomizer",
+                        "queue.management.configurations.local.connection-prefix:local.jms",
+                        "local.jms.host:fakeHost",
+                        "local.jms.port:123",
+                        "local.jms.user:fakeUser",
+                        "local.jms.password:fakePassword",
+                        "local.jms.vHost:fakeVHost",
+                        "queue.management.configurations.local.queues.doc-request.name:fakeQueueName",
+                        "queue.management.configurations.local.queues.doc-request.durable:true")
+                .build();
+
+        assertEquals(4, TestAmqpBeanDefinitionCustomizer.invocationsAmount);
     }
 }

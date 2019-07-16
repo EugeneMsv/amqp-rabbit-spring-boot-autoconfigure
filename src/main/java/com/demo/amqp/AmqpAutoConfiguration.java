@@ -24,7 +24,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
 @EnableConfigurationProperties(AmqpProperties.class)
-@ConditionalOnProperty(name = "queue.management.enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = AmqpAutoConfigurationConstants.Property.MANAGEMENT_ENABLED, havingValue = "true", matchIfMissing = true)
 @AutoConfigureAfter(AmqpMessageConverterAutoConfiguration.class)
 @AutoConfigureBefore(RabbitAutoConfiguration.class)
 @Import({AmqpBeanDefinitionRegistrar.class, RabbitListenerConfigurationSelector.class})

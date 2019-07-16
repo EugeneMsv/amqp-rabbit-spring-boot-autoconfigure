@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableConfigurationProperties(AmqpProperties.class)
-@ConditionalOnProperty(name = "queue.management.enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = AmqpAutoConfigurationConstants.Property.MANAGEMENT_ENABLED, havingValue = "true", matchIfMissing = true)
 @AutoConfigureBefore(RabbitAutoConfiguration.class)
 public class AmqpMessageConverterAutoConfiguration {
 
