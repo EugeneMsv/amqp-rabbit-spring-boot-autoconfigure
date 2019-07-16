@@ -41,7 +41,7 @@ public class AmqpAutoConfigurationConstants {
 
         public static final String BEAN_DEFINITION_CUSTOMIZER = "queue.management.bean.definition.customizer";
 
-        public static final String BEAN_DEFINITION_CUSTOMIZER_DEFAULT = "DefaultAmqpBeanDefinitionCustomizer";
+        public static final String BEAN_DEFINITION_CUSTOMIZER_DEFAULT = "com.amqp.rabbit.bean.DefaultAmqpBeanDefinitionCustomizer";
 
         public static final String APPLICATION_NAME = "spring.application.name";
 

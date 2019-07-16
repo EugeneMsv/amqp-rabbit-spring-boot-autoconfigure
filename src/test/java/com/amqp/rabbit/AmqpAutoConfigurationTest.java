@@ -575,7 +575,7 @@ public class AmqpAutoConfigurationTest {
                 .withConfiguration(MessageConverterConfiguration.class,
                         AmqpAutoConfiguration.class)
                 .withEnvironment(
-                        BEAN_DEFINITION_CUSTOMIZER + ":" + "AmqpAutoConfigurationTest$TestAmqpBeanDefinitionCustomizer",
+                        BEAN_DEFINITION_CUSTOMIZER + ":" + "com.amqp.rabbit.AmqpAutoConfigurationTest$TestAmqpBeanDefinitionCustomizer",
                         "queue.management.configurations.local.connection-prefix:local.jms",
                         "local.jms.host:fakeHost",
                         "local.jms.port:123",
