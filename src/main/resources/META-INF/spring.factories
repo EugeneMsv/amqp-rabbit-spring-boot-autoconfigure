@@ -1,5 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.demo.amqp.AmqpMessageConverterAutoConfiguration,\
-  com.demo.amqp.AmqpAutoConfiguration
+  AmqpMessageConverterAutoConfiguration,\
+  AmqpAutoConfiguration
 
-org.springframework.boot.env.EnvironmentPostProcessor=com.demo.amqp.AmqpEnvironmentPostProcessor
+org.springframework.boot.env.EnvironmentPostProcessor=com.amqp.rabbit.AmqpEnvironmentPostProcessor
