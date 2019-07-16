@@ -1,4 +1,4 @@
-SPRING-AMQP-RABBIT-CONFIGURATOR
+amqp-rabbit-spring-boot-autoconfigure
 ====
 
 The goal of this project is to create Spring-Boot starter which allows integrate with RabbitMQ only via properties.
@@ -19,8 +19,8 @@ All configurations are based on [spring-amqp](https://docs.spring.io/spring-amqp
     ```xml
     
         <dependency>
-            <groupId>com.demo.amqp</groupId>
-            <artifactId>spring-amqp-rabbit-configurator</artifactId>
+            <groupId>com.amqp.rabbit</groupId>
+            <artifactId>amqp-rabbit-spring-boot-autoconfigure</artifactId>
             <version>currentVersion</version>
         </dependency>
         
@@ -177,18 +177,18 @@ All configurations are based on [spring-amqp](https://docs.spring.io/spring-amqp
         ```java
         @RabbitListener(queues = "fakeQueueName", containerFactory = "localRabbitListenerContainerFactory",  admin="localRabbitAdmin")
         ```
-        In order to get info about registered beans, just setup log level to debug for package `com.amqp.demo`
+        In order to get info about registered beans, just setup log level to debug for package `com.amqp.rabbit`
         
     * Library automatically excludes `org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration`
     
     * Each RabbitMQ connection has a name is built like this:
      `${spring.application.name}+<Connection-name>` 
         
-    * In order to customize registration of bean definition you can provide custom implementation for `com.demo.amqp.bean.AmqpBeanDefinitionCustomizer`
+    * In order to customize registration of bean definition you can provide custom implementation for `com.rabbit.amqp.bean.AmqpBeanDefinitionCustomizer`
         and set full class name to the property `queue.management.bean.definition.customizer`.
         Take care about no-args constructor in your custom implementation.
         
-    * In order to customize creation of beans you can provide custom implementation for `com.demo.amqp.bean.AmqpBeansFactory` 
+    * In order to customize creation of beans you can provide custom implementation for `com.rabbit.amqp.bean.AmqpBeansFactory` 
     and set bean name to the property `queue.management.bean.factory`. 
     Add custom to the application context implementation like ordinary bean.
     
