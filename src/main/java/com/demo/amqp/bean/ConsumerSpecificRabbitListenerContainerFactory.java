@@ -12,6 +12,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Executor;
 
 public class ConsumerSpecificRabbitListenerContainerFactory extends SimpleRabbitListenerContainerFactory {
 
@@ -19,9 +20,9 @@ public class ConsumerSpecificRabbitListenerContainerFactory extends SimpleRabbit
 
     public static final String RABBIT_THREAD_PREFIX = "rabbit-";
 
-    private ObjectProvider<ThreadPoolTaskExecutor> executorObjectProvider;
+    protected ObjectProvider<ThreadPoolTaskExecutor> executorObjectProvider;
 
-    private Map<String, AmqpListenerContainerProperties> consumerPropertiesByQueueName = Collections.emptyMap();
+    protected Map<String, AmqpListenerContainerProperties> consumerPropertiesByQueueName = Collections.emptyMap();
 
     @Autowired
     @Qualifier("messagingThreadPoolTaskExecutor")
@@ -54,7 +55,7 @@ public class ConsumerSpecificRabbitListenerContainerFactory extends SimpleRabbit
 
             String threadNamePrefix = rawThreadNamePrefix
                     .substring(0, Math.min(DEFAULT_MAX_THREAD_NAME_PREFIX_LENGTH, rawThreadNamePrefix.length()));
-            ThreadPoolTaskExecutor threadPoolTaskExecutor = buildTaskExecutor(
+            Executor threadPoolTaskExecutor = buildTaskExecutor(
                     threadNamePrefix + "-", listenerProperties);
 
             instance.setTaskExecutor(threadPoolTaskExecutor);
@@ -66,7 +67,7 @@ public class ConsumerSpecificRabbitListenerContainerFactory extends SimpleRabbit
         }
     }
 
-    private AmqpListenerContainerProperties tryFindListenerProperties(
+    protected AmqpListenerContainerProperties tryFindListenerProperties(
             AmqpListenerContainerProperties listenerProperties, String queueName) {
         return Optional.ofNullable(consumerPropertiesByQueueName.get(queueName))
                 .filter(properties -> properties.getConcurrentConsumers() > 1)
@@ -77,8 +78,8 @@ public class ConsumerSpecificRabbitListenerContainerFactory extends SimpleRabbit
                 .orElse(listenerProperties);
     }
 
-    private ThreadPoolTaskExecutor buildTaskExecutor(String threadNamePrefix,
-                                                     AmqpListenerContainerProperties listenerProperties) {
+    protected ThreadPoolTaskExecutor buildTaskExecutor(String threadNamePrefix,
+                                       AmqpListenerContainerProperties listenerProperties) {
         ThreadPoolTaskExecutor threadPoolTaskExecutor = executorObjectProvider
                 .getObject(listenerProperties.getConcurrentConsumers(),
                         listenerProperties.getMaxConcurrentConsumers()+1);
