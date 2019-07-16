@@ -60,6 +60,9 @@ public class ConsumerSpecificRabbitListenerContainerFactory extends SimpleRabbit
             instance.setTaskExecutor(threadPoolTaskExecutor);
             instance.setMaxConcurrentConsumers(listenerProperties.getMaxConcurrentConsumers());
             instance.setConcurrentConsumers(listenerProperties.getConcurrentConsumers());
+            // if MaxConcurrentConsumers > ConcurrentConsumers
+            // and if any consumer handles at least one message try to start new consumer
+            instance.setConsecutiveActiveTrigger(1);
         }
     }
 
@@ -78,7 +81,7 @@ public class ConsumerSpecificRabbitListenerContainerFactory extends SimpleRabbit
                                                      AmqpListenerContainerProperties listenerProperties) {
         ThreadPoolTaskExecutor threadPoolTaskExecutor = executorObjectProvider
                 .getObject(listenerProperties.getConcurrentConsumers(),
-                        listenerProperties.getMaxConcurrentConsumers());
+                        listenerProperties.getMaxConcurrentConsumers()+1);
         threadPoolTaskExecutor.setThreadNamePrefix(threadNamePrefix);
         return threadPoolTaskExecutor;
     }

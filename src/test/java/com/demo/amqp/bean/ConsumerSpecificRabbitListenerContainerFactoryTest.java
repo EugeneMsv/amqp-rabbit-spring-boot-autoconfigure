@@ -41,9 +41,9 @@ public class ConsumerSpecificRabbitListenerContainerFactoryTest {
     }
 
     @Test
-    public void customizeConsumer() {
+    public void test_customizeConsumer() {
         ThreadPoolTaskExecutor threadPoolTaskExecutor = Mockito.mock(ThreadPoolTaskExecutor.class);
-        when(objectProvider.getObject(eq(5), eq(10))).thenReturn(threadPoolTaskExecutor);
+        when(objectProvider.getObject(eq(5), eq(11))).thenReturn(threadPoolTaskExecutor);
 
         SimpleMessageListenerContainer listenerContainer = mock(SimpleMessageListenerContainer.class);
         when(listenerContainer.getQueueNames()).thenReturn(new String[]{"queue1", "queue3"});
@@ -57,9 +57,9 @@ public class ConsumerSpecificRabbitListenerContainerFactoryTest {
     }
 
     @Test
-    public void customizeConsumer_MoreThanOneQueueProps() {
+    public void test_customizeConsumer_MoreThanOneQueueProps() {
         ThreadPoolTaskExecutor threadPoolTaskExecutor = Mockito.mock(ThreadPoolTaskExecutor.class);
-        when(objectProvider.getObject(eq(7), eq(15))).thenReturn(threadPoolTaskExecutor);
+        when(objectProvider.getObject(eq(7), eq(16))).thenReturn(threadPoolTaskExecutor);
 
         SimpleMessageListenerContainer listenerContainer = mock(SimpleMessageListenerContainer.class);
         when(listenerContainer.getQueueNames()).thenReturn(new String[]{"queue1", "queue2"});

@@ -41,10 +41,13 @@ public class AmqpAutoConfiguration {
 
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+    @ConditionalOnMissingBean(name = "messagingThreadPoolTaskExecutor")
     public ThreadPoolTaskExecutor messagingThreadPoolTaskExecutor(int corePoolSize, int maxPoolSize) {
         ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
         threadPoolTaskExecutor.setCorePoolSize(corePoolSize);
         threadPoolTaskExecutor.setMaxPoolSize(maxPoolSize);
+        // Require increase pool size as fast as possible
+        threadPoolTaskExecutor.setQueueCapacity(1);
         return threadPoolTaskExecutor;
     }
 }

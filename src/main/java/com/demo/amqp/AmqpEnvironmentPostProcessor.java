@@ -25,13 +25,14 @@ public class AmqpEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
     public static final String PROPERTY_SOURCE_NAME = "amqpBuiltSource";
 
+    public static final String APPLIANCE_TRIGGER = "false";
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
 
         String enabled = environment.getProperty(AmqpAutoConfigurationConstants.Property.MANAGEMENT_ENABLED);
-        if ("false".equalsIgnoreCase(enabled)) {
-            logger.debug("Skip cause {} is false", AmqpAutoConfigurationConstants.Property.MANAGEMENT_ENABLED);
+        if (APPLIANCE_TRIGGER.equalsIgnoreCase(enabled)) {
+            logger.debug("Skip cause {} is disabled", AmqpAutoConfigurationConstants.Property.MANAGEMENT_ENABLED);
             return;
         }
         String exclusions = environment.getProperty(AUTO_CONFIGURE_EXCLUDE);
@@ -43,8 +44,7 @@ public class AmqpEnvironmentPostProcessor implements EnvironmentPostProcessor {
             String updatedExclusions = exclusions + EXCLUDE_AUTO_CONFIGURATION_DELIMITER + EXCLUDE_RABBIT_AUTO_CONFIGURATION_VALUE;
             addFirstPriorityProperty(environment, updatedExclusions);
         } else {
-            String newExclusions = EXCLUDE_RABBIT_AUTO_CONFIGURATION_VALUE;
-            addFirstPriorityProperty(environment, newExclusions);
+            addFirstPriorityProperty(environment, EXCLUDE_RABBIT_AUTO_CONFIGURATION_VALUE);
         }
     }
 
