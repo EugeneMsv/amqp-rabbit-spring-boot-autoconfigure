@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/EugeneMsv/amqp-rabbit-spring-boot-autoconfigure.png)](https://travis-ci.org/EugeneMsv/amqp-rabbit-spring-boot-autoconfigure)
+
 amqp-rabbit-spring-boot-autoconfigure
 ====
 
