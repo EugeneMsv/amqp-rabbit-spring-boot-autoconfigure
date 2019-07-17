@@ -23,6 +23,7 @@
         <maven-scm-provider-gitexe.version>1.9.5</maven-scm-provider-gitexe.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
         <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
     </properties>
 
 
@@ -147,7 +148,6 @@
                 <executions>
                     <execution>
                         <id>attach-sources</id>
-                        <phase>verify</phase>
                         <goals>
                             <goal>jar-no-fork</goal>
                         </goals>
@@ -165,10 +165,10 @@
                 </configuration>
                 <executions>
                     <execution>
-                    <id>attach-javadoc</id>
-                    <goals>
-                        <goal>jar</goal>
-                    </goals>
+                        <id>attach-javadoc</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -185,30 +185,52 @@
         </pluginManagement>
     </build>
 
-    <repositories>
-        <repository>
-            <id>sonatype-release</id>
-            <name>Release Repository</name>
-            <url>${release.repo.url}</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-        <repository>
-            <id>sonatype-snapshot</id>
+
+    <profiles>
+        <!-- GPG Signature on release -->
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
             <name>Snapshot Repository</name>
             <url>${snapshot.repo.url}</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <name>Release Repository</name>
+            <url>${release.repo.url}</url>
         </repository>
-    </repositories>
+    </distributionManagement>
+
+
 
 
 </project>
