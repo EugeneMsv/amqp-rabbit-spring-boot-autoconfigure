@@ -1,4 +1,6 @@
 language: java
+before_install:
+  - chmod +x mvnw
 cache:
   directories:
     - $HOME/.mvn/wrapper/
