@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.eugene.msv.amqp.rabbit</groupId>
+    <groupId>com.github.eugenemsv.amqp.rabbit</groupId>
     <artifactId>amqp-rabbit-spring-boot-autoconfigure</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -17,7 +17,21 @@
         <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
         <maven.deploy.plugin.version>2.8.2</maven.deploy.plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+        <nexus-url>https://oss.sonatype.org/</nexus-url>
+        <snapshot.repo.url>${nexus-url}content/repositories/snapshots</snapshot.repo.url>
+        <release.repo.url>${nexus-url}service/local/staging/deploy/maven2</release.repo.url>
+        <maven-scm-provider-gitexe.version>1.11.2</maven-scm-provider-gitexe.version>
+        <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+        <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
     </properties>
+
+
+    <scm>
+        <connection>scm:git:git://github.com/EugeneMsv/amqp-rabbit-spring-boot-autoconfigure.git</connection>
+        <developerConnection>scm:git:git@github.com:EugeneMsv/amqp-rabbit-spring-boot-autoconfigure.git</developerConnection>
+        <url>https://github.com/EugeneMsv/amqp-rabbit-spring-boot-autoconfigure</url>
+        <tag>HEAD</tag>
+    </scm>
 
 
     <dependencyManagement>
@@ -97,6 +111,32 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
                 <version>${maven-release-plugin.version}</version>
+                <configuration>
+                    <localCheckout>true</localCheckout>
+                    <pushChanges>false</pushChanges>
+                    <mavenExecutorId>forked-path</mavenExecutorId>
+                    <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.scm</groupId>
+                        <artifactId>maven-scm-provider-gitexe</artifactId>
+                        <version>${maven-scm-provider-gitexe.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>${nexus-staging-maven-plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>${nexus-url}</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
             </plugin>
 
 
@@ -114,6 +154,24 @@
                     </execution>
                 </executions>
             </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                    <id>attach-javadoc</id>
+                    <goals>
+                        <goal>jar</goal>
+                    </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
 
         <pluginManagement>
@@ -126,6 +184,31 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <repositories>
+        <repository>
+            <id>ossrh</id>
+            <name>Release Repository</name>
+            <url>${release.repo.url}</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>ossrh</id>
+            <name>Snapshot Repository</name>
+            <url>${snapshot.repo.url}</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
 
 
 </project>
