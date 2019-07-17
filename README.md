@@ -190,5 +190,5 @@ All configurations are based on [spring-amqp](https://docs.spring.io/spring-amqp
         
     * In order to customize creation of beans you can provide custom implementation for `com.rabbit.amqp.bean.AmqpBeansFactory` 
     and set bean name to the property `queue.management.bean.factory`. 
-    Add custom to the application context implementation like ordinary bean.
+    Add custom implementation to the application context  like ordinary bean.
     
