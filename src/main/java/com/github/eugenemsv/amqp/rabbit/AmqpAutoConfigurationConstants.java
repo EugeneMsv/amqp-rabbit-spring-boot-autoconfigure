@@ -31,15 +31,15 @@ public class AmqpAutoConfigurationConstants {
 
         public static final String AUTO_CONFIGURE_EXCLUDE = "spring.autoconfigure.exclude";
 
-        public static final String ROOT_PREFIX = "queue.management";
+        public static final String ROOT_PREFIX = "queue.rabbit.management";
 
-        public static final String MANAGEMENT_ENABLED = ROOT_PREFIX+".enabled";
+        public static final String MANAGEMENT_ENABLED = ROOT_PREFIX + ".enabled";
 
-        public static final String FACTORY_BEAN_NAME = "queue.management.bean.factory";
+        public static final String FACTORY_BEAN_NAME = ROOT_PREFIX + ".bean.factory";
 
         public static final String FACTORY_BEAN_NAME_DEFAULT = "amqpBeansFactory";
 
-        public static final String BEAN_DEFINITION_CUSTOMIZER = "queue.management.bean.definition.customizer";
+        public static final String BEAN_DEFINITION_CUSTOMIZER = ROOT_PREFIX + ".bean.definition.customizer";
 
         public static final String BEAN_DEFINITION_CUSTOMIZER_DEFAULT = "com.github.eugenemsv.amqp.rabbit.bean.DefaultAmqpBeanDefinitionCustomizer";
 

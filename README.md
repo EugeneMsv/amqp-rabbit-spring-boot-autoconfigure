@@ -43,13 +43,13 @@ All configurations are based on [spring-amqp](https://docs.spring.io/spring-amqp
     local.jms.user=guest
     local.jms.password=guest
     local.jms.vHost=/
-    queue.management.configurations.local.connection-prefix=local.jms
-    queue.management.configurations.local.queues.firstQueue.name=simple-queue
-    queue.management.configurations.local.queues.firstQueue.durable=true
+    queue.rabbit.management.configurations.local.connection-prefix=local.jms
+    queue.rabbit.management.configurations.local.queues.firstQueue.name=simple-queue
+    queue.rabbit.management.configurations.local.queues.firstQueue.durable=true
     ```
 * Add bean with method:
     ``` java
-    @RabbitListener(queues = "${queue.management.configurations.local.queues.firstQueue.name}")
+    @RabbitListener(queues = "${queue.rabbit.management.configurations.local.queues.firstQueue.name}")
     public void handleMessage(org.springframework.amqp.core.Message message) {
         System.out.println("Got message="+message);
     }
@@ -69,7 +69,7 @@ All configurations are based on [spring-amqp](https://docs.spring.io/spring-amqp
 
     * Bind `<connection-name>` with RabbitMQ instance
         ```properties
-        queue.management.configurations.local.connection-prefix=local.jms
+        queue.rabbit.management.configurations.local.connection-prefix=local.jms
         
         local.jms.host=localhost
         local.jms.port=5672
@@ -88,30 +88,30 @@ All configurations are based on [spring-amqp](https://docs.spring.io/spring-amqp
         If you don't want use library's **MessageConverter** and you don't need its **ObjectMapper**
         you should set property:
         ``` properties
-        queue.management.custom-object-mapper=true
+        queue.rabbit.management.custom-object-mapper=true
         ``` 
     
     * There is an ability to add retry support ([see the documentation for details](https://docs.spring.io/spring-amqp/docs/latest-snapshot/reference/htmlsingle/#template-retry))
 
          ```properties    
-         queue.management.configurations.<connection-name>.retry.maxAttempts=3
-         queue.management.configurations.<connection-name>.retry.initial-interval=1000
-         queue.management.configurations.<connection-name>.retry.multiplier=1.0
-         queue.management.configurations.<connection-name>.retry.maxI-interval=10000
+         queue.rabbit.management.configurations.<connection-name>.retry.maxAttempts=3
+         queue.rabbit.management.configurations.<connection-name>.retry.initial-interval=1000
+         queue.rabbit.management.configurations.<connection-name>.retry.multiplier=1.0
+         queue.rabbit.management.configurations.<connection-name>.retry.maxI-interval=10000
          ```
     * [Exception handling](https://docs.spring.io/spring-amqp/docs/latest-snapshot/reference/htmlsingle/#exception-handling)
         ```properties    
-         queue.management.configurations.<connection-name>.defaultRequeueRejected
+         queue.rabbit.management.configurations.<connection-name>.defaultRequeueRejected
          ```
     * Concurrency settings for all listeners in one connection:
        ```properties
-         queue.management.configurations.<connection-name>.listener.concurrentConsumers
-         queue.management.configurations.<connection-name>.listener.maxConcurrentConsumers
+         queue.rabbit.management.configurations.<connection-name>.listener.concurrentConsumers
+         queue.rabbit.management.configurations.<connection-name>.listener.maxConcurrentConsumers
        ``` 
     * Concurrency settings for listeners by queue:
         ```properties
-          queue.management.configurations.<connection-name>.queues.<queue-key>.listener.concurrentConsumers=<value>
-          queue.management.configurations.<connection-name>.queues.<queue-key>.listener.maxConcurrentConsumers=<value>
+          queue.rabbit.management.configurations.<connection-name>.queues.<queue-key>.listener.concurrentConsumers=<value>
+          queue.rabbit.management.configurations.<connection-name>.queues.<queue-key>.listener.maxConcurrentConsumers=<value>
          ```   
          Since listener can listen simultaneously more than one queue there are such options:
          1. Only one listening queue has concurrency properties. In that case listener will be setup according this properties. 
@@ -119,14 +119,14 @@ All configurations are based on [spring-amqp](https://docs.spring.io/spring-amqp
          2. None of queues don't have concurrency properties. Listener will work in sequential way or according to:
          
             ```properties
-            queue.management.configurations.<connection-name>.listener.concurrentConsumers=<value>
-            queue.management.configurations.<connection-name>.listener.maxConcurrentConsumers=<value>
+            queue.rabbit.management.configurations.<connection-name>.listener.concurrentConsumers=<value>
+            queue.rabbit.management.configurations.<connection-name>.listener.maxConcurrentConsumers=<value>
             ```
          3. Two or more queues have concurrency properties. There will be chosen configuration with highest 
             **maxConcurrentConsumers** value.
     * Support of fail fast behavior during startup.
         ```properties    
-         queue.management.configurations.<connection-name>.mismatchedQueuesFatal
+         queue.rabbit.management.configurations.<connection-name>.mismatchedQueuesFatal
          ```
         From official spring-amqp docs: 
             `
@@ -138,39 +138,39 @@ All configurations are based on [spring-amqp](https://docs.spring.io/spring-amqp
              `
     * For disabling configuration you need add:
         ```properties
-         queue.management.enabled=false
+         queue.rabbit.management.enabled=false
         ```
     * Default property values:
         ```
-        queue.management.enabled=false
-        queue.management.custom-object-mapper=false
+        queue.rabbit.management.enabled=false
+        queue.rabbit.management.custom-object-mapper=false
         
-        queue.management.configurations.<connection-name>.retry.enabled=false
-        queue.management.configurations.<connection-name>.retry.maxAttempts=3
-        queue.management.configurations.<connection-name>.retry.initial-interval=1000
-        queue.management.configurations.<connection-name>.retry.multiplier=1.0
-        queue.management.configurations.<connection-name>.retry.maxI-interval=10000
+        queue.rabbit.management.configurations.<connection-name>.retry.enabled=false
+        queue.rabbit.management.configurations.<connection-name>.retry.maxAttempts=3
+        queue.rabbit.management.configurations.<connection-name>.retry.initial-interval=1000
+        queue.rabbit.management.configurations.<connection-name>.retry.multiplier=1.0
+        queue.rabbit.management.configurations.<connection-name>.retry.maxI-interval=10000
         
-        queue.management.configurations.<connection-name>.mismatchedQueuesFatal=true
-        queue.management.configurations.<connection-name>.defaultRequeueRejected=true
-        queue.management.configurations.<connection-name>.dead-letter-suffix=.errors
+        queue.rabbit.management.configurations.<connection-name>.mismatchedQueuesFatal=true
+        queue.rabbit.management.configurations.<connection-name>.defaultRequeueRejected=true
+        queue.rabbit.management.configurations.<connection-name>.dead-letter-suffix=.errors
         
-        queue.management.configurations.<connection-name>.listener.concurrentConsumers=1
-        queue.management.configurations.<connection-name>.listener.maxConcurrentConsumers=1
+        queue.rabbit.management.configurations.<connection-name>.listener.concurrentConsumers=1
+        queue.rabbit.management.configurations.<connection-name>.listener.maxConcurrentConsumers=1
         
-        queue.management.configurations.<connection-name>.queues.<queue-key>.durable=false
-        queue.management.configurations.<connection-name>.queues.<queue-key>.exclusive=false
-        queue.management.configurations.<connection-name>.queues.<queue-key>.autoDelete=false
-        queue.management.configurations.<connection-name>.queues.<queue-key>.with-dead-letter=false
-        queue.management.configurations.<connection-name>.queues.<queue-key>.dead-letter-config.bidirectional=false
-        queue.management.configurations.<connection-name>.queues.<queue-key>.dead-letter-config.time-to-live=3600000
+        queue.rabbit.management.configurations.<connection-name>.queues.<queue-key>.durable=false
+        queue.rabbit.management.configurations.<connection-name>.queues.<queue-key>.exclusive=false
+        queue.rabbit.management.configurations.<connection-name>.queues.<queue-key>.autoDelete=false
+        queue.rabbit.management.configurations.<connection-name>.queues.<queue-key>.with-dead-letter=false
+        queue.rabbit.management.configurations.<connection-name>.queues.<queue-key>.dead-letter-config.bidirectional=false
+        queue.rabbit.management.configurations.<connection-name>.queues.<queue-key>.dead-letter-config.time-to-live=3600000
         
         
-        queue.management.configurations.<connection-name>.topicExchanges.<topic-exchange-key>.name=
-        queue.management.configurations.<connection-name>.topicExchanges.<topic-exchange-key>.durable=false
-        queue.management.configurations.<connection-name>.topicExchanges.<topic-exchange-key>.autoDelete=false
+        queue.rabbit.management.configurations.<connection-name>.topicExchanges.<topic-exchange-key>.name=
+        queue.rabbit.management.configurations.<connection-name>.topicExchanges.<topic-exchange-key>.durable=false
+        queue.rabbit.management.configurations.<connection-name>.topicExchanges.<topic-exchange-key>.autoDelete=false
         
-        queue.management.configurations.<connection-name>.bindings.<queue-key>.<topic-exchange-key>.routingKeys.<routing-key-name>=*.*.*
+        queue.rabbit.management.configurations.<connection-name>.bindings.<queue-key>.<topic-exchange-key>.routingKeys.<routing-key-name>=*.*.*
         ```
 * Other features:   
 
@@ -187,10 +187,10 @@ All configurations are based on [spring-amqp](https://docs.spring.io/spring-amqp
      `${spring.application.name}+<Connection-name>` 
         
     * In order to customize registration of bean definition you can provide custom implementation for `com.github.eugenemsv.amqp.rabbit.bean.AmqpBeanDefinitionCustomizer`
-        and set full class name to the property `queue.management.bean.definition.customizer`.
+        and set full class name to the property `queue.rabbit.management.bean.definition.customizer`.
         Take care about no-args constructor in your custom implementation.
         
     * In order to customize creation of beans you can provide custom implementation for `com.github.eugenemsv.amqp.rabbit.bean.AmqpBeansFactory` 
-    and set bean name to the property `queue.management.bean.factory`. 
+    and set bean name to the property `queue.rabbit.management.bean.factory`. 
     Add custom implementation to the application context  like ordinary bean.
     

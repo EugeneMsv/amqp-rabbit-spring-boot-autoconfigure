@@ -33,7 +33,7 @@ public class AmqpMessageConverterAutoConfigurationTest {
     @Test
     public void test_objectMapper_created() throws NoSuchFieldException, IllegalAccessException {
         ApplicationContext context = contextWrapper.withConfiguration(AmqpMessageConverterAutoConfiguration.class)
-                .withEnvironment("queue.management.custom-object-mapper:false")
+                .withEnvironment("queue.rabbit.management.custom-object-mapper:false")
                 .build()
                 .getContext();
 
@@ -65,7 +65,7 @@ public class AmqpMessageConverterAutoConfigurationTest {
         ApplicationContext context = contextWrapper.withConfiguration(
                 ObjectMapperConfiguration.class,
                 AmqpMessageConverterAutoConfiguration.class)
-                .withEnvironment("queue.management.custom-object-mapper:false")
+                .withEnvironment("queue.rabbit.management.custom-object-mapper:false")
                 .build()
                 .getContext();
 

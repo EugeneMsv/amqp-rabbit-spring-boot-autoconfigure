@@ -102,13 +102,13 @@ public class AmqpAutoConfigurationTest {
 
         ApplicationContext context = contextWrapper
                 .withConfiguration(MessageConverterConfiguration.class, AmqpAutoConfiguration.class)
-                .withEnvironment("queue.management.configurations." + namePrefix + ".connection-prefix:rabbit.jms",
+                .withEnvironment("queue.rabbit.management.configurations." + namePrefix + ".connection-prefix:rabbit.jms",
                         "rabbit.jms.host:fakeHost",
                         "rabbit.jms.port:123",
                         "rabbit.jms.user:fakeUser",
                         "rabbit.jms.password:fakePassword",
                         "rabbit.jms.vHost:fakeVHost",
-                        "queue.management.configurations.local.queues.fake-queue.name:fakeQueueName")
+                        "queue.rabbit.management.configurations.local.queues.fake-queue.name:fakeQueueName")
                 .build()
                 .getContext();
         AmqpPropertiesSupplier propertiesSupplier = new AmqpPropertiesSupplier(context.getEnvironment());
@@ -130,29 +130,29 @@ public class AmqpAutoConfigurationTest {
         String namePrefix3 = "local3";
         ApplicationContext context = contextWrapper
                 .withConfiguration(MessageConverterConfiguration.class, AmqpAutoConfiguration.class)
-                .withEnvironment("queue.management.configurations.local1.connection-prefix:local1.jms",
+                .withEnvironment("queue.rabbit.management.configurations.local1.connection-prefix:local1.jms",
                         "local1.jms.host:fakeHost1",
                         "local1.jms.port:1",
                         "local1.jms.user:fakeUser1",
                         "local1.jms.password:fakePassword1",
                         "local1.jms.vHost:fakeVHost1",
-                        "queue.management.configurations.local1.queues.fake-queue.name:fakeQueueName1",
+                        "queue.rabbit.management.configurations.local1.queues.fake-queue.name:fakeQueueName1",
 
-                        "queue.management.configurations.local2.connection-prefix:local2.jms",
+                        "queue.rabbit.management.configurations.local2.connection-prefix:local2.jms",
                         "local2.jms.host:fakeHost2",
                         "local2.jms.port:2",
                         "local2.jms.user:fakeUser2",
                         "local2.jms.password:fakePassword2",
                         "local2.jms.vHost:fakeVHost2",
-                        "queue.management.configurations.local2.queues.fake-queue.name:fakeQueueName2",
+                        "queue.rabbit.management.configurations.local2.queues.fake-queue.name:fakeQueueName2",
 
-                        "queue.management.configurations.local3.connection-prefix:local3.jms",
+                        "queue.rabbit.management.configurations.local3.connection-prefix:local3.jms",
                         "local3.jms.host:fakeHost3",
                         "local3.jms.port:3",
                         "local3.jms.user:fakeUser3",
                         "local3.jms.password:fakePassword3",
                         "local3.jms.vHost:fakeVHost3",
-                        "queue.management.configurations.local3.queues.fake-queue.name:fakeQueueName3")
+                        "queue.rabbit.management.configurations.local3.queues.fake-queue.name:fakeQueueName3")
                 .build()
                 .getContext();
 
@@ -193,14 +193,14 @@ public class AmqpAutoConfigurationTest {
         ApplicationContext context = contextWrapper
                 .withConfiguration(MessageConverterConfiguration.class, AmqpAutoConfiguration.class)
                 .withEnvironment(
-                        "queue.management.configurations.local.connection-prefix:local.jms",
+                        "queue.rabbit.management.configurations.local.connection-prefix:local.jms",
                         "local.jms.host:fakeHost",
                         "local.jms.port:123",
                         "local.jms.user:fakeUser",
                         "local.jms.password:fakePassword",
                         "local.jms.vHost:fakeVHost",
-                        "queue.management.configurations.local.queues.doc-request.name:fakeQueueName",
-                        "queue.management.configurations.local.queues.doc-request.durable:true")
+                        "queue.rabbit.management.configurations.local.queues.doc-request.name:fakeQueueName",
+                        "queue.rabbit.management.configurations.local.queues.doc-request.durable:true")
                 .build()
                 .getContext();
 
@@ -224,18 +224,18 @@ public class AmqpAutoConfigurationTest {
         String namePrefix = "local";
         ApplicationContext context = contextWrapper
                 .withConfiguration(MessageConverterConfiguration.class, AmqpAutoConfiguration.class)
-                .withEnvironment("queue.management.configurations.local.connection-prefix:local.jms",
+                .withEnvironment("queue.rabbit.management.configurations.local.connection-prefix:local.jms",
                         "local.jms.host:fakeHost",
                         "local.jms.port:123",
                         "local.jms.user:fakeUser",
                         "local.jms.password:fakePassword",
                         "local.jms.vHost:fakeVHost",
-                        "queue.management.configurations.local.queues.doc-request.name:docRequestName",
-                        "queue.management.configurations.local.queues.doc-request.durable:true",
-                        "queue.management.configurations.local.queues.doc-request.listener.concurrentConsumers:5",
-                        "queue.management.configurations.local.queues.doc-request.listener.maxConcurrentConsumers:10",
-                        "queue.management.configurations.local.queues.doc-response.name:docResponseName",
-                        "queue.management.configurations.local.queues.doc-response.durable:false")
+                        "queue.rabbit.management.configurations.local.queues.doc-request.name:docRequestName",
+                        "queue.rabbit.management.configurations.local.queues.doc-request.durable:true",
+                        "queue.rabbit.management.configurations.local.queues.doc-request.listener.concurrentConsumers:5",
+                        "queue.rabbit.management.configurations.local.queues.doc-request.listener.maxConcurrentConsumers:10",
+                        "queue.rabbit.management.configurations.local.queues.doc-response.name:docResponseName",
+                        "queue.rabbit.management.configurations.local.queues.doc-response.durable:false")
                 .build()
                 .getContext();
 
@@ -278,50 +278,50 @@ public class AmqpAutoConfigurationTest {
                 .withConfiguration(MessageConverterConfiguration.class, AmqpAutoConfiguration.class)
                 .withEnvironment(
                         "spring.application.name:fake-Application",
-                        "queue.management.configurations.local1.connection-prefix:local1.jms",
+                        "queue.rabbit.management.configurations.local1.connection-prefix:local1.jms",
                         "local1.jms.host:fakeHost1",
                         "local1.jms.port:1",
                         "local1.jms.user:fakeUser1",
                         "local1.jms.password:fakePassword1",
                         "local1.jms.vHost:fakeVHost1",
-                        "queue.management.configurations.local1.dead-letter-suffix:.errors1",
-                        "queue.management.configurations.local1.mismatchedQueuesFatal:false",
-                        "queue.management.configurations.local1.queues.fake-queue.name:fakeQueueName1",
-                        "queue.management.configurations.local1.queues.fake-queue.withDeadLetter:true",
-                        "queue.management.configurations.local1.queues.fake-queue.durable:true",
-                        "queue.management.configurations.local1.queues.fake-queue.exclusive:true",
-                        "queue.management.configurations.local1.queues.fake-queue.auto-delete:true",
+                        "queue.rabbit.management.configurations.local1.dead-letter-suffix:.errors1",
+                        "queue.rabbit.management.configurations.local1.mismatchedQueuesFatal:false",
+                        "queue.rabbit.management.configurations.local1.queues.fake-queue.name:fakeQueueName1",
+                        "queue.rabbit.management.configurations.local1.queues.fake-queue.withDeadLetter:true",
+                        "queue.rabbit.management.configurations.local1.queues.fake-queue.durable:true",
+                        "queue.rabbit.management.configurations.local1.queues.fake-queue.exclusive:true",
+                        "queue.rabbit.management.configurations.local1.queues.fake-queue.auto-delete:true",
 
-                        "queue.management.configurations.local2.connection-prefix:local2.jms",
+                        "queue.rabbit.management.configurations.local2.connection-prefix:local2.jms",
                         "local2.jms.host:fakeHost2",
                         "local2.jms.port:2",
                         "local2.jms.user:fakeUser2",
                         "local2.jms.password:fakePassword2",
                         "local2.jms.vHost:fakeVHost2",
-                        "queue.management.configurations.local2.dead-letter-suffix:.errors2",
-                        "queue.management.configurations.local2.queues.fake-queue.name:fakeQueueName2",
-                        "queue.management.configurations.local2.queues.fake-queue.withDeadLetter:true",
-                        "queue.management.configurations.local2.queues.fake-queue.dead-letter-config.bidirectional:true",
-                        "queue.management.configurations.local2.queues.fake-queue.dead-letter-config.timeToLive:100",
+                        "queue.rabbit.management.configurations.local2.dead-letter-suffix:.errors2",
+                        "queue.rabbit.management.configurations.local2.queues.fake-queue.name:fakeQueueName2",
+                        "queue.rabbit.management.configurations.local2.queues.fake-queue.withDeadLetter:true",
+                        "queue.rabbit.management.configurations.local2.queues.fake-queue.dead-letter-config.bidirectional:true",
+                        "queue.rabbit.management.configurations.local2.queues.fake-queue.dead-letter-config.timeToLive:100",
 
-                        "queue.management.configurations.local3.connection-prefix:local3.jms",
+                        "queue.rabbit.management.configurations.local3.connection-prefix:local3.jms",
                         "local3.jms.host:fakeHost3",
                         "local3.jms.port:3",
                         "local3.jms.user:fakeUser3",
                         "local3.jms.password:fakePassword3",
                         "local3.jms.vHost:fakeVHost3",
-                        "queue.management.configurations.local3.dead-letter-suffix:.errors3",
-                        "queue.management.configurations.local3.queues.fake-queue.name:fakeQueueName3",
-                        "queue.management.configurations.local3.queues.fake-queue.arguments.key3:value3",
+                        "queue.rabbit.management.configurations.local3.dead-letter-suffix:.errors3",
+                        "queue.rabbit.management.configurations.local3.queues.fake-queue.name:fakeQueueName3",
+                        "queue.rabbit.management.configurations.local3.queues.fake-queue.arguments.key3:value3",
 
-                        "queue.management.configurations.local3.queues.queueForBinding1.name:someQueueForBinding",
-                        "queue.management.configurations.local3.queues.queueForBinding1.durable:true",
-                        "queue.management.configurations.local3.queues.queueForBinding1.autoDelete:true",
-                        "queue.management.configurations.local3.topicExchanges.topicExchangeForBinding1.name:someTopicName",
-                        "queue.management.configurations.local3.topicExchanges.topicExchangeForBinding1.durable:true",
-                        "queue.management.configurations.local3.topicExchanges.topicExchangeForBinding1.autoDelete:true",
-                        "queue.management.configurations.local3.bindings.queueForBinding1.topicExchangeForBinding1.routingKeys.rk1:request1.*.*",
-                        "queue.management.configurations.local3.bindings.queueForBinding1.topicExchangeForBinding1.routingKeys.rk2:request2.*.*"
+                        "queue.rabbit.management.configurations.local3.queues.queueForBinding1.name:someQueueForBinding",
+                        "queue.rabbit.management.configurations.local3.queues.queueForBinding1.durable:true",
+                        "queue.rabbit.management.configurations.local3.queues.queueForBinding1.autoDelete:true",
+                        "queue.rabbit.management.configurations.local3.topicExchanges.topicExchangeForBinding1.name:someTopicName",
+                        "queue.rabbit.management.configurations.local3.topicExchanges.topicExchangeForBinding1.durable:true",
+                        "queue.rabbit.management.configurations.local3.topicExchanges.topicExchangeForBinding1.autoDelete:true",
+                        "queue.rabbit.management.configurations.local3.bindings.queueForBinding1.topicExchangeForBinding1.routingKeys.rk1:request1.*.*",
+                        "queue.rabbit.management.configurations.local3.bindings.queueForBinding1.topicExchangeForBinding1.routingKeys.rk2:request2.*.*"
                 )
                 .build()
                 .getContext();
@@ -425,19 +425,19 @@ public class AmqpAutoConfigurationTest {
         String namePrefix = "local";
         ApplicationContext context = contextWrapper
                 .withConfiguration(MessageConverterConfiguration.class, AmqpAutoConfiguration.class)
-                .withEnvironment("queue.management.configurations.local.connection-prefix:local.jms",
-                        "queue.management.configurations.local.retry.enabled:true",
-                        "queue.management.configurations.local.retry.max-attempts:5",
-                        "queue.management.configurations.local.retry.initial-interval:50",
-                        "queue.management.configurations.local.retry.multiplier:1.5",
-                        "queue.management.configurations.local.retry.max-interval:500",
+                .withEnvironment("queue.rabbit.management.configurations.local.connection-prefix:local.jms",
+                        "queue.rabbit.management.configurations.local.retry.enabled:true",
+                        "queue.rabbit.management.configurations.local.retry.max-attempts:5",
+                        "queue.rabbit.management.configurations.local.retry.initial-interval:50",
+                        "queue.rabbit.management.configurations.local.retry.multiplier:1.5",
+                        "queue.rabbit.management.configurations.local.retry.max-interval:500",
                         "local.jms.host:fakeHost",
                         "local.jms.port:123",
                         "local.jms.user:fakeUser",
                         "local.jms.password:fakePassword",
                         "local.jms.vHost:fakeVHost",
-                        "queue.management.configurations.local.queues.doc-request.name:fakeQueueName",
-                        "queue.management.configurations.local.queues.doc-request.durable:true")
+                        "queue.rabbit.management.configurations.local.queues.doc-request.name:fakeQueueName",
+                        "queue.rabbit.management.configurations.local.queues.doc-request.durable:true")
                 .build()
                 .getContext();
 
@@ -471,17 +471,17 @@ public class AmqpAutoConfigurationTest {
         ApplicationContext context = contextWrapper
                 .withConfiguration(MessageConverterConfiguration.class, AmqpAutoConfiguration.class)
                 .withEnvironment(
-                        "queue.management.configurations.local.connection-prefix:local.jms",
-                        "queue.management.configurations.local.defaultRequeueRejected:false",
-                        "queue.management.configurations.local.listener.concurrentConsumers:2",
-                        "queue.management.configurations.local.listener.maxConcurrentConsumers:5",
+                        "queue.rabbit.management.configurations.local.connection-prefix:local.jms",
+                        "queue.rabbit.management.configurations.local.defaultRequeueRejected:false",
+                        "queue.rabbit.management.configurations.local.listener.concurrentConsumers:2",
+                        "queue.rabbit.management.configurations.local.listener.maxConcurrentConsumers:5",
                         "local.jms.host:fakeHost",
                         "local.jms.port:123",
                         "local.jms.user:fakeUser",
                         "local.jms.password:fakePassword",
                         "local.jms.vHost:fakeVHost",
-                        "queue.management.configurations.local.queues.doc-request.name:fakeQueueName",
-                        "queue.management.configurations.local.queues.doc-request.durable:true")
+                        "queue.rabbit.management.configurations.local.queues.doc-request.name:fakeQueueName",
+                        "queue.rabbit.management.configurations.local.queues.doc-request.durable:true")
                 .build()
                 .getContext();
 
@@ -524,14 +524,14 @@ public class AmqpAutoConfigurationTest {
                         AmqpAutoConfiguration.class)
                 .withEnvironment(
                         FACTORY_BEAN_NAME + ":" + customBeansFactoryName,
-                        "queue.management.configurations.local.connection-prefix:local.jms",
+                        "queue.rabbit.management.configurations.local.connection-prefix:local.jms",
                         "local.jms.host:fakeHost",
                         "local.jms.port:123",
                         "local.jms.user:fakeUser",
                         "local.jms.password:fakePassword",
                         "local.jms.vHost:fakeVHost",
-                        "queue.management.configurations.local.queues.doc-request.name:fakeQueueName",
-                        "queue.management.configurations.local.queues.doc-request.durable:true")
+                        "queue.rabbit.management.configurations.local.queues.doc-request.name:fakeQueueName",
+                        "queue.rabbit.management.configurations.local.queues.doc-request.durable:true")
                 .build()
                 .getContext();
         String[] beanNamesForAmqpBeansFactory = context.getBeanNamesForType(AmqpBeansFactory.class);
@@ -577,14 +577,14 @@ public class AmqpAutoConfigurationTest {
                         AmqpAutoConfiguration.class)
                 .withEnvironment(
                         BEAN_DEFINITION_CUSTOMIZER + ":" + "com.github.eugenemsv.amqp.rabbit.AmqpAutoConfigurationTest$TestAmqpBeanDefinitionCustomizer",
-                        "queue.management.configurations.local.connection-prefix:local.jms",
+                        "queue.rabbit.management.configurations.local.connection-prefix:local.jms",
                         "local.jms.host:fakeHost",
                         "local.jms.port:123",
                         "local.jms.user:fakeUser",
                         "local.jms.password:fakePassword",
                         "local.jms.vHost:fakeVHost",
-                        "queue.management.configurations.local.queues.doc-request.name:fakeQueueName",
-                        "queue.management.configurations.local.queues.doc-request.durable:true")
+                        "queue.rabbit.management.configurations.local.queues.doc-request.name:fakeQueueName",
+                        "queue.rabbit.management.configurations.local.queues.doc-request.durable:true")
                 .build();
 
         assertEquals(4, TestAmqpBeanDefinitionCustomizer.invocationsAmount);
