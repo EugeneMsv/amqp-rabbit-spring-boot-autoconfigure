@@ -187,7 +187,7 @@
 
     <repositories>
         <repository>
-            <id>ossrh</id>
+            <id>sonatype-release</id>
             <name>Release Repository</name>
             <url>${release.repo.url}</url>
             <snapshots>
@@ -198,7 +198,7 @@
             </releases>
         </repository>
         <repository>
-            <id>ossrh</id>
+            <id>sonatype-snapshot</id>
             <name>Snapshot Repository</name>
             <url>${snapshot.repo.url}</url>
             <snapshots>
