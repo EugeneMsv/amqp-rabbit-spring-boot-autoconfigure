@@ -20,7 +20,7 @@
         <nexus-url>https://oss.sonatype.org/</nexus-url>
         <snapshot.repo.url>${nexus-url}content/repositories/snapshots</snapshot.repo.url>
         <release.repo.url>${nexus-url}service/local/staging/deploy/maven2</release.repo.url>
-        <maven-scm-provider-gitexe.version>1.11.2</maven-scm-provider-gitexe.version>
+        <maven-scm-provider-gitexe.version>1.9.5</maven-scm-provider-gitexe.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
         <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
     </properties>
