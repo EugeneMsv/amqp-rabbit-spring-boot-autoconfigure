@@ -4,7 +4,7 @@
 
     <groupId>com.github.eugenemsv.amqp.rabbit</groupId>
     <artifactId>amqp-rabbit-spring-boot-autoconfigure</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>amqp-rabbit-spring-boot-autoconfigure</name>
     <description>Declarative RabbitMQ configurator</description>
     <url>https://github.com/EugeneMsv/amqp-rabbit-spring-boot-autoconfigure</url>
@@ -47,7 +47,7 @@
         <connection>scm:git:git://github.com/EugeneMsv/amqp-rabbit-spring-boot-autoconfigure.git</connection>
         <developerConnection>scm:git:git@github.com:EugeneMsv/amqp-rabbit-spring-boot-autoconfigure.git</developerConnection>
         <url>https://github.com/EugeneMsv/amqp-rabbit-spring-boot-autoconfigure</url>
-        <tag>amqp-rabbit-spring-boot-autoconfigure-1.0.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
 
