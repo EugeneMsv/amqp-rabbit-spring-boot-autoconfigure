@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/EugeneMsv/amqp-rabbit-spring-boot-autoconfigure.png)](https://travis-ci.org/EugeneMsv/amqp-rabbit-spring-boot-autoconfigure)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.eugenemsv.amqp.rabbit/amqp-rabbit-spring-boot-autoconfigure/badge.png)](https://maven-badges.herokuapp.com/maven-central/com.github.eugenemsv.amqp.rabbit/amqp-rabbit-spring-boot-autoconfigure)
 
 amqp-rabbit-spring-boot-autoconfigure
 ====
@@ -9,13 +10,14 @@ Besides it allows to connect to multiple RabbitMQ instances separately.
 
 All configurations are based on [spring-amqp](https://docs.spring.io/spring-amqp/docs/latest-snapshot/reference/htmlsingle/) abstractions.
 
+## Compatability
+
+| amqp-rabbit-spring-boot-autoconfigure  | Spring-Boot |
+| ------------- | ------------- |
+| 1.0.0 | 2.1.6.RELEASE |
 
 ## Quick start
 
-* Build project:
-    ```cmd
-       > mvnw clean install -DskipTests=true
-    ```
 * Add dependencies:
 
     ```xml
