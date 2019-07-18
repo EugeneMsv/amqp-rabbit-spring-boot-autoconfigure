@@ -7,6 +7,24 @@
     <groupId>com.github.eugenemsv.amqp.rabbit</groupId>
     <artifactId>amqp-rabbit-spring-boot-autoconfigure</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <name>amqp-rabbit-spring-boot-autoconfigure</name>
+    <description>Declarative RabbitMQ configurator</description>
+    <url>https://github.com/EugeneMsv/amqp-rabbit-spring-boot-autoconfigure</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Eugene Moiseev</name>
+            <organization>EugeneMsv</organization>
+            <organizationUrl>https://github.com/EugeneMsv</organizationUrl>
+        </developer>
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
